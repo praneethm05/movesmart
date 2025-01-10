@@ -1,0 +1,154 @@
+.profile-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: var(--background-mint);
+  min-height: calc(100vh - 80px);
+}
+
+.profile-header {
+  background: white;
+  border-radius: 24px;
+  padding: 2rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  background: var(--background-mint);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-red);
+}
+
+.profile-info h1 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+}
+
+.profile-info p {
+  color: var(--text-secondary);
+  margin: 0.5rem 0 1rem 0;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 2rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary-red);
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.profile-sections {
+  background: white;
+  border-radius: 24px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+
+.profile-section-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  gap: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: 12px;
+}
+
+.profile-section-item:hover {
+  background: var(--background-light);
+}
+
+.section-icon {
+  color: var(--primary-red);
+}
+
+.section-title {
+  flex: 1;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.chevron-icon {
+  color: var(--text-secondary);
+}
+
+.achievements-section {
+  background: white;
+  border-radius: 24px;
+  padding: 2rem;
+}
+
+.achievements-section h2 {
+  margin: 0 0 1.5rem 0;
+  color: var(--text-primary);
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.achievement-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: var(--background-light);
+}
+
+.achievement-icon {
+  color: var(--primary-red);
+}
+
+.achievement-info h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.achievement-info p {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .profile-stats {
+    justify-content: center;
+  }
+
+  .achievements-grid {
+    grid-template-columns: 1fr;
+  }
+} 

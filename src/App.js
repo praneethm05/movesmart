@@ -5,16 +5,18 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Navbar />
-        <Routes>
-          {routes.map(({ path, element: Element }) => (
-            <Route key={path} path={path} element={<Element />} />
-          ))}
-        </Routes>
-      </div>
-    </Router>
+    <>
+      <Router>
+        <div className="App">
+          <Navbar />
+          <Routes>
+            {routes.map(({ path, element: Element }) => (
+              <Route key={path} path={path} element={<Element />} />
+            ))}
+          </Routes>
+        </div>
+      </Router>
+    </>
   );
 }
 

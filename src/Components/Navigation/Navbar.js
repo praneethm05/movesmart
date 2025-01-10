@@ -3,10 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 import { Car, User, Gift, MapPin } from 'lucide-react';
 import './Navbar.css';
 
+
 export const Navbar = () => {
   const location = useLocation();
   const [time, setTime] = React.useState('');
-  const [points, setPoints] = React.useState('1800');
+  const points = '1800';
 
   React.useEffect(() => {
     const updateTime = () => {

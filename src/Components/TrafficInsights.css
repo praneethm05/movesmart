@@ -1,0 +1,250 @@
+.insights-card {
+  background: white;
+  border-radius: 24px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.insights-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.insights-header h2 {
+  font-size: 1.125rem;
+  color: var(--text-primary);
+  margin: 0;
+  font-weight: 500;
+}
+
+.report-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: var(--background-light);
+  color: var(--text-primary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.report-button:hover {
+  background: var(--background-mint);
+}
+
+.insights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.insight-item {
+  padding: 1rem 1.5rem;
+  background: var(--background-light);
+  border-radius: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.insight-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.insight-main {
+  padding-right: 1rem;
+}
+
+.insight-main h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.issue-type {
+  color: var(--text-secondary);
+  font-size: 0.813rem;
+  margin: 0.25rem 0;
+}
+
+.report-time {
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.insight-percentage {
+  font-weight: 600;
+  font-size: 1rem;
+  padding-left: 0.75rem;
+}
+
+.voting-section {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.vote-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-light);
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-secondary);
+}
+
+.vote-button:hover {
+  background: var(--background-mint);
+}
+
+.vote-button.active {
+  background: var(--primary-red);
+  color: white;
+  border-color: var(--primary-red);
+}
+
+.vote-button span {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .insights-card {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  .insight-item {
+    padding: 0.75rem 1rem;
+  }
+
+  .insights-header h2 {
+    font-size: 1rem;
+  }
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.report-modal {
+  background: white;
+  border-radius: 24px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  margin: 1rem;
+}
+
+.report-modal h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.report-modal .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.report-modal label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.report-modal input,
+.report-modal select,
+.report-modal textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  font-size: 0.875rem;
+  background: white;
+  color: var(--text-primary);
+}
+
+.report-modal textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.modal-actions button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.modal-actions button:first-child {
+  background: var(--background-light);
+  border: none;
+  color: var(--text-primary);
+}
+
+.modal-actions button:first-child:hover {
+  background: var(--background-mint);
+}
+
+.submit-btn {
+  background: var(--primary-red);
+  color: white;
+  border: none;
+}
+
+.submit-btn:hover {
+  background: var(--primary-red-dark, #dc2626);
+}
+
+@media (max-width: 768px) {
+  .report-modal {
+    padding: 1.5rem;
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .modal-actions button {
+    width: 100%;
+  }
+} 

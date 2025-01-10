@@ -1,0 +1,11 @@
+.location-display {
+  position: relative;
+}
+
+.location-display.loading span {
+  opacity: 0.7;
+}
+
+.location-display.error span {
+  color: var(--primary-red);
+} 
