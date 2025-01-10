@@ -1,0 +1,151 @@
+/* Base styles */
+:root {
+  --primary-blue: #3498db;
+  --primary-red: #e74c3c;
+  --text-dark: #2c3e50;
+  --bg-mint: #a8e6cf;
+}
+
+.dashboard-container {
+  min-height: 100vh;
+  background-color: var(--bg-mint);
+  padding: 1.5rem;
+}
+
+/* Header styles */
+.header {
+  background: linear-gradient(to right, #ffffff, #f8f9fa);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.logo-text {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.drive-points {
+  background-color: var(--primary-red);
+  color: white;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+}
+
+/* Traffic Status styles */
+.traffic-indicator {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle,
+    rgba(231, 76, 60, 0.1),
+    rgba(231, 76, 60, 0.2) 10px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.5rem;
+}
+
+/* Route Plans styles */
+.route-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.route-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.go-button {
+  background-color: var(--primary-blue);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.go-button:hover {
+  background-color: #2980b9;
+}
+
+/* Search input styles */
+.search-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  font-size: 1rem;
+}
+
+/* Insights styles */
+.insights-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.insight-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.percentage {
+  color: #27ae60;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Summary styles */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+.summary-item {
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .traffic-indicator {
+    width: 90px;
+    height: 90px;
+  }
+}
