@@ -1,17 +1,17 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Dashboard from "./Screens/dashboard";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Navbar } from './Components/Navigation/Navbar';
+import { routes } from './routes';
+import './App.css';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <nav>
-          <Link to="/">Home</Link> | <Link to="/dashboard">Dashboard</Link>
-        </nav>
+        <Navbar />
         <Routes>
-          <Route path="/" element={<div>Welcome to the Home Page!</div>} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          {routes.map(({ path, element: Element }) => (
+            <Route key={path} path={path} element={<Element />} />
+          ))}
         </Routes>
       </div>
     </Router>

@@ -1,235 +1,299 @@
-import React from "react";
-import { Card, CardContent } from "../Components/Card.js";
-import { Button } from "../Components/button.js";
-import {
-  Activity,
-  Navigation,
-  MapPin,
-  Clock,
-  Car,
-  Search,
-  Home,
-  Briefcase,
-  TrendingUp,
-  Plus,
-  User,
-  DollarSign,
-} from "lucide-react";
+import React, { useState } from "react";
+import { Search, MapPin, ChevronRight, Plus, AlertCircle } from "lucide-react";
+import "./dashboard.css";
 
-const Dashboard = () => {
+// Define routes data
+const routesData = [
+  { 
+    name: "Bunagere, Endgame", 
+    time: "2:32 PM", 
+    duration: "7 Min Drive",
+    recommendedTime: "2:15 PM",
+    trafficStatus: "heavy" // can be 'light', 'medium', 'heavy'
+  },
+  { 
+    name: "Home", 
+    time: "2:45 PM", 
+    duration: "7 Min Drive",
+    recommendedTime: "2:30 PM",
+    trafficStatus: "medium"
+  },
+  { 
+    name: "Work", 
+    time: "7:32 PM", 
+    duration: "7 Min Drive",
+    recommendedTime: "7:15 PM",
+    trafficStatus: "light"
+  },
+];
+
+// RouteItem Component
+const RouteItem = ({ name, time, duration, recommendedTime, trafficStatus }) => (
+  <div className="route-item">
+    <div className="route-info">
+      <div className="route-main">
+        <h4>{name}</h4>
+        <p>{time} • {duration}</p>
+      </div>
+      <div className="route-recommendation">
+        <div className={`traffic-indicator ${trafficStatus}`}></div>
+        <p>Recommended departure: <span>{recommendedTime}</span></p>
+      </div>
+    </div>
+    <button className="go-btn">
+      Go <ChevronRight size={16} />
+    </button>
+  </div>
+);
+
+// InsightItem Component
+const InsightItem = ({ text, percentage, isUserReported }) => (
+  <div className="insight-item">
+    <div className="insight-header">
+      <span>{text}</span>
+      <span className="percentage">{percentage}%</span>
+    </div>
+    {isUserReported && <p className="user-reported">user's reported</p>}
+  </div>
+);
+
+// Define ReportModal before Dashboard component
+const ReportModal = ({ isOpen, onClose }) => {
+  const [reportData, setReportData] = useState({
+    description: '',
+    location: ''
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Report submitted:', reportData);
+    setReportData({ description: '', location: '' });
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
   return (
-    <div className="min-h-screen bg-emerald-100/60 p-4">
-      {/* Header Bar */}
-      <div className="flex justify-between items-center bg-white/90 p-3 rounded-lg shadow-sm mb-6">
-        <div className="flex items-center gap-3">
-          <Car className="text-red-500" size={24} />
-          <div>
-            <span className="font-bold text-xl">Move Smart</span>
-            <p className="text-xs text-gray-500">
-              the traffic dashboard solution
-            </p>
+    <div className="modal-overlay">
+      <div className="add-route-modal report-modal">
+        <h3>Report Traffic Issue</h3>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Description</label>
+            <textarea
+              placeholder="Describe the traffic issue..."
+              value={reportData.description}
+              onChange={(e) => setReportData({...reportData, description: e.target.value})}
+              required
+            />
           </div>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-4">
-            <User size={20} className="text-gray-600" />
-            <Car size={20} className="text-gray-600" />
-            <DollarSign size={20} className="text-gray-600" />
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="text-sm text-right">
-              <p className="font-medium">You're Currently in</p>
-              <p className="text-gray-600">Mangaluru</p>
+          <div className="form-group">
+            <label>Location</label>
+            <div className="location-field">
+              <input
+                type="text"
+                placeholder="Enter location"
+                value={reportData.location}
+                onChange={(e) => setReportData({...reportData, location: e.target.value})}
+                required
+              />
+              <button type="button" className="location-icon-btn">
+                <MapPin size={18} />
+              </button>
             </div>
-            <MapPin className="text-red-500" size={20} />
           </div>
-        </div>
-      </div>
-
-      <div className="flex justify-end items-center mb-4 gap-4">
-        <div className="flex items-center gap-2">
-          <Clock size={18} className="text-gray-600" />
-          <span className="text-xl font-semibold">2:45 PM</span>
-        </div>
-        <div className="bg-white px-4 py-1 rounded-md shadow-sm">
-          <span className="text-gray-700 font-medium">Drive Points</span>
-          <span className="text-red-500 font-bold ml-2">1800</span>
-        </div>
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid md:grid-cols-2 gap-6">
-        {/* Left Panel */}
-        <div className="space-y-6">
-          {/* Traffic Status */}
-          <Card className="bg-white/90 shadow-sm">
-            <CardContent className="p-6">
-              <h3 className="text-lg font-medium mb-6">
-                Your location is Currently Experiencing
-              </h3>
-              <div className="flex items-center gap-8">
-                <div className="relative w-32 h-32">
-                  <div className="absolute inset-0 rounded-full bg-[#FFE5E5] overflow-hidden">
-                    <div
-                      className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxsaW5lIHgxPSIwIiB5PSIwIiB4Mj0iMCIgeTI9IjQwIiBzdHJva2U9IiNmZjAwMDAiIHN0cm9rZS13aWR0aD0iMiIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==')]"
-                      style={{ opacity: 0.2 }}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <p className="text-red-500 text-xl font-medium">
-                    Heavy Traffic for the past 30 min's
-                  </p>
-                  <p className="text-gray-600 mt-2">
-                    Convenient time to drive smoothly Expected:{" "}
-                    <span className="text-green-600 font-medium">3:40 PM</span>
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Active Route Plans */}
-          <Card className="bg-white/90 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-medium">Active Route Plans</h3>
-                <button className="flex items-center gap-1 text-blue-500">
-                  <Plus size={16} />
-                  <span className="text-sm">Add</span>
-                </button>
-              </div>
-              <div className="space-y-4">
-                {[
-                  {
-                    title: "Avengers: Endgame",
-                    subtitle: "@Cinepolis 4:00 PM",
-                    time: "3:50 PM",
-                    duration: "7 Min Drive",
-                    details: "700 Meters from Work",
-                  },
-                  {
-                    title: "Home",
-                    subtitle: "@1.572382482 8:30 PM",
-                    time: "7:50 PM",
-                    duration: "7 Min Drive",
-                    details: "700 Meters from Work",
-                  },
-                  {
-                    title: "Work",
-                    subtitle: "@1.572382482",
-                    time: "7:50 PM",
-                    duration: "7 Min Drive",
-                    details: "700 Meters from Work",
-                  },
-                ].map((route, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
-                  >
-                    <div>
-                      <p className="font-medium">{route.title}</p>
-                      <p className="text-gray-500 text-sm">{route.subtitle}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium">{route.time}</p>
-                      <p className="text-gray-500 text-xs">{route.duration}</p>
-                      <p className="text-gray-400 text-xs">{route.details}</p>
-                    </div>
-                    <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6">
-                      Go
-                    </Button>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-4 text-center">
-                <button className="text-gray-500 text-sm">+ 11 More...</button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right Panel */}
-        <div className="space-y-6">
-          {/* Route Input */}
-          <Card className="bg-white/90 shadow-sm">
-            <CardContent className="p-6">
-              <h3 className="text-lg font-medium mb-4">Move Where?</h3>
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <Search
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                    size={18}
-                  />
-                  <input
-                    type="text"
-                    placeholder="City Centre, Mall"
-                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-                <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6">
-                  Go
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Insights */}
-          <Card className="bg-white/90 shadow-sm">
-            <CardContent className="p-6">
-              <h3 className="text-lg font-medium mb-6">
-                Insights on Traffic in your region
-              </h3>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center border-b border-gray-100 pb-4">
-                  <div>
-                    <p className="text-sm">Reported Road Works near</p>
-                    <p className="font-medium">@Hampankatta</p>
-                  </div>
-                  <div className="flex items-center gap-2 text-green-500">
-                    <span className="text-xl font-bold">98%</span>
-                    <TrendingUp size={20} />
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm">For the past 24 days</p>
-                    <p className="font-medium">@Jyothi</p>
-                  </div>
-                  <div className="flex items-center gap-2 text-green-500">
-                    <span className="text-xl font-bold">100%</span>
-                    <TrendingUp size={20} />
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Summary */}
-          <Card className="bg-white/90 shadow-sm">
-            <CardContent>
-              <div className="grid grid-cols-3 gap-4 p-4">
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-700">49 KM</p>
-                  <p className="text-sm text-gray-500">Fuel Saved</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-700">50 Hours</p>
-                  <p className="text-sm text-gray-500">of Traffic Less Drive</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-2xl font-bold text-gray-700">5000</p>
-                  <p className="text-sm text-gray-500">
-                    Points Redeemed for Fuel
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+          <div className="modal-actions">
+            <button type="button" onClick={onClose}>Cancel</button>
+            <button type="submit" className="submit-btn">Submit Report</button>
+          </div>
+        </form>
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+// Add this after ReportModal component (around line 113)
+const AddRouteModal = ({ isOpen, onClose }) => {
+  const [routeData, setRouteData] = useState({
+    destination: '',
+    arrivalTime: '',
+    priority: ''
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Route submitted:', routeData);
+    setRouteData({ destination: '', arrivalTime: '', priority: '' });
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="add-route-modal">
+        <h3>Add New Route</h3>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Destination</label>
+            <input
+              type="text"
+              placeholder="Enter destination"
+              value={routeData.destination}
+              onChange={(e) => setRouteData({...routeData, destination: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Arrival Time</label>
+            <input
+              type="time"
+              value={routeData.arrivalTime}
+              onChange={(e) => setRouteData({...routeData, arrivalTime: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Priority</label>
+            <select 
+              className="priority-select"
+              value={routeData.priority}
+              onChange={(e) => setRouteData({...routeData, priority: e.target.value})}
+              required
+            >
+              <option value="">Select priority</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div className="modal-actions">
+            <button type="button" onClick={onClose}>Cancel</button>
+            <button type="submit" className="submit-btn">Add Route</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// Then define Dashboard component
+export const Dashboard = () => {
+  const [searchValue, setSearchValue] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [routes, setRoutes] = useState(routesData);
+  const [newRoute, setNewRoute] = useState({
+    destination: '',
+    arrivalTime: '',
+    priority: ''
+  });
+
+  const calculateRecommendedTime = (arrivalTime) => {
+    if (!arrivalTime) return '';
+    const [hours, minutes] = arrivalTime.split(':');
+    const date = new Date();
+    date.setHours(parseInt(hours));
+    date.setMinutes(parseInt(minutes) - 15);
+    return `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="dashboard-wrapper">
+      <div className="dashboard-container">
+        {/* Left Section */}
+        <div className="left-section">
+          {/* Traffic Status */}
+          <div className="traffic-status-card">
+            <div className="traffic-indicator">
+              {/* Pulsing red circle */}
+            </div>
+            <div className="status-content">
+              <h3>Your location is Currently</h3>
+              <p className="status-highlight">Experiencing Traffic for the past 2 hours</p>
+              <div className="time-prediction">
+                <p>Convenient time to drive smoothly</p>
+                <p className="expected-time">Expected: 2:45 PM</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Route Plans */}
+          <div className="route-plans-card">
+            <div className="card-header">
+              <div className="header-left">
+                <h3>Active Route Plans</h3>
+                <span className="traffic-level">Med</span>
+              </div>
+              <button className="add-route-btn" onClick={() => setIsModalOpen(true)}>
+                <Plus size={16} />
+                Add Route
+              </button>
+            </div>
+            <div className="routes-list">
+              {routes.map((route, index) => (
+                <RouteItem key={index} {...route} />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Section */}
+        <div className="right-section">
+          <div className="search-card">
+            <h3>Move Where?</h3>
+            <div className="search-input-wrapper">
+              <Search className="search-icon" />
+              <input
+                type="text"
+                placeholder="City Centre, Mall"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
+              <button className="search-btn">Go</button>
+            </div>
+          </div>
+
+          <div className="insights-card">
+            <div className="insights-header">
+              <h3>Insights on Traffic in your region</h3>
+              <button className="report-issue-btn" onClick={() => setIsReportModalOpen(true)}>
+                <AlertCircle size={16} />
+                Report Issue
+              </button>
+            </div>
+            
+            <div className="insight-item">
+              <div className="insight-header">
+                <span>Reported Road Works near @hampankatta</span>
+                <span className="percentage">85%</span>
+              </div>
+              <p className="user-reported">user's reported</p>
+            </div>
+
+            <div className="insight-item">
+              <div className="insight-header">
+                <span>For the past 24 days</span>
+                <span className="percentage">100%</span>
+              </div>
+              <p className="user-reported">user's reported</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {isModalOpen && (
+        <AddRouteModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
+      {isReportModalOpen && (
+        <ReportModal
+          isOpen={isReportModalOpen}
+          onClose={() => setIsReportModalOpen(false)}
+        />
+      )}
+    </div>
+  );
+};
+
