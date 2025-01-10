@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Search, MapPin, ChevronRight, Plus, AlertCircle } from "lucide-react";
 import "./dashboard.css";
+import { useNavigate } from 'react-router-dom';
 
 // Define routes data
 const routesData = [
@@ -179,6 +180,7 @@ const AddRouteModal = ({ isOpen, onClose }) => {
 
 // Then define Dashboard component
 export const Dashboard = () => {
+  const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -250,7 +252,12 @@ export const Dashboard = () => {
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
               />
-              <button className="search-btn">Go</button>
+              <button 
+                className="search-btn" 
+                onClick={() => navigate('/navigate')}
+              >
+                Go
+              </button>
             </div>
           </div>
 

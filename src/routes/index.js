@@ -2,6 +2,7 @@ import { Dashboard } from '../Screens/dashboard';
 import { Profile } from '../pages/Profile';
 import { Vehicle } from '../pages/Vehicle';
 import { Redeem } from '../pages/Redeem';
+import { Navigate } from '../pages/Navigate';
 
 export const routes = [
   {
@@ -19,5 +20,9 @@ export const routes = [
   {
     path: '/redeem',
     element: Redeem,
+  },
+  {
+    path: '/navigate',
+    element: Navigate,
   }
 ]; 

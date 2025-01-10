@@ -1,0 +1,115 @@
+.navigate-page {
+  padding: 2rem;
+  height: calc(100vh - 80px);
+  background: var(--background-mint);
+}
+
+.navigate-container {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  height: 100%;
+}
+
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.destination-card {
+  background: white;
+  border-radius: 24px;
+  padding: 1.5rem;
+}
+
+.destination-card h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.destination-input input {
+  width: 100%;
+  padding: 0.875rem;
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.routes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.route-option {
+  background: white;
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.route-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.route-option.selected {
+  border: 2px solid var(--primary-red);
+}
+
+.route-name {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.route-points {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.route-points.positive {
+  color: #22C55E;
+}
+
+.route-points.negative {
+  color: var(--primary-red);
+}
+
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.map-interface {
+  flex: 1;
+  background: white;
+  border-radius: 24px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.go-button {
+  background: #22C55E;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.go-button:hover {
+  opacity: 0.9;
+} 
