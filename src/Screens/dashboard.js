@@ -1,36 +1,79 @@
-import React, { useState } from "react";
-import { Search, MapPin, ChevronRight, Plus, AlertCircle, Clock, Fuel, Award, TrendingDown } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Search, MapPin, ChevronRight, Plus, AlertCircle, Clock, Fuel, Award, TrendingDown, Trash2 } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { TrafficInsights } from '../Components/TrafficInsights';
+import { trafficService, routeService } from '../services/api';
 import "./dashboard.css";
 
-const RouteItem = ({ name, time, duration, recommendedTime, trafficStatus }) => (
-  <div className="route-item">
-    <div className="route-info">
-      <div className="route-main">
-        <h4>{name}</h4>
-        <p>{time} • {duration}</p>
-      </div>
-      <div className="route-recommendation">
-        <span>Recommended Time: {recommendedTime}</span>
-        <div className={`route-traffic-indicator ${trafficStatus}`} />
-      </div>
-    </div>
-    <button className="go-btn">
-      Go <ChevronRight size={16} />
-    </button>
-  </div>
-);
-
-const AddRouteModal = ({ isOpen, onClose }) => {
-  const [newRoute, setNewRoute] = useState({
-    name: '',
-    location: ''
+const RouteItem = ({ route_id, name, onDelete }) => {
+  const [routeInfo, setRouteInfo] = useState({
+    duration: 'N/A',
+    distance: 'N/A',
+    expectedDeparture: '04:41 AM'
   });
 
-  const handleSubmit = (e) => {
+  return (
+    <div className="route-wrapper">
+      <div className="route-header-section">
+        <div className="route-title">
+          <span className="route-name">Google Now</span>
+          <span className="traffic-badge">Medium</span>
+          <span className="duration-tag">N/A</span>
+        </div>
+        <div className="route-metrics">
+          <div className="metric-row">
+            <span>Normal Duration:</span>
+            <span className="metric-value">N/A</span>
+          </div>
+          <div className="metric-row">
+            <span>Distance:</span>
+            <span className="metric-value">N/A</span>
+          </div>
+          <div className="metric-row departure">
+            <span>Expected Departure:</span>
+            <span className="departure-time">04:41 AM</span>
+          </div>
+        </div>
+        <div className="route-actions">
+          <button className="delete-btn" onClick={() => onDelete(route_id)}>
+            <Trash2 size={18} />
+          </button>
+          <button className="go-btn">
+            Go <ChevronRight size={18} />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AddRouteModal = ({ isOpen, onClose, onAdd }) => {
+  const [newRoute, setNewRoute] = useState({
+    title: '',
+    start_location: '',
+    end_location: ''
+  });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onClose();
+    try {
+      const routeData = {
+        route_id: `ROUTE${Date.now()}`,
+        user_id: "1", // Replace with actual user ID from auth
+        title: newRoute.title,
+        start_location: newRoute.start_location,
+        end_location: newRoute.end_location,
+        lastUpdated: new Date().toISOString()
+      };
+
+      await routeService.addRoute(routeData);
+      onAdd(); // Refresh routes list
+      onClose();
+      setNewRoute({ title: '', start_location: '', end_location: '' }); // Reset form
+    } catch (error) {
+      console.error('Failed to add route:', error);
+      alert('Failed to add route. Please try again.');
+    }
   };
 
   if (!isOpen) return null;
@@ -41,29 +84,34 @@ const AddRouteModal = ({ isOpen, onClose }) => {
         <h3>Add New Route</h3>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Route Name</label>
+            <label>Route Title*</label>
             <input
               type="text"
-              placeholder="Home, Work, etc."
-              value={newRoute.name}
-              onChange={(e) => setNewRoute({...newRoute, name: e.target.value})}
+              placeholder="Home to Work, Shopping Route, etc."
+              value={newRoute.title}
+              onChange={(e) => setNewRoute({...newRoute, title: e.target.value})}
               required
             />
           </div>
           <div className="form-group">
-            <label>Location</label>
-            <div className="location-field">
-              <input
-                type="text"
-                placeholder="Enter location"
-                value={newRoute.location}
-                onChange={(e) => setNewRoute({...newRoute, location: e.target.value})}
-                required
-              />
-              <button type="button" className="location-icon-btn">
-                <MapPin size={18} />
-              </button>
-            </div>
+            <label>Start Location*</label>
+            <input
+              type="text"
+              placeholder="Enter start location"
+              value={newRoute.start_location}
+              onChange={(e) => setNewRoute({...newRoute, start_location: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>End Location*</label>
+            <input
+              type="text"
+              placeholder="Enter destination"
+              value={newRoute.end_location}
+              onChange={(e) => setNewRoute({...newRoute, end_location: e.target.value})}
+              required
+            />
           </div>
           <div className="modal-actions">
             <button type="button" onClick={onClose}>Cancel</button>
@@ -87,60 +135,237 @@ const ReportModal = ({ isOpen, onClose }) => {
   );
 };
 
+const DUMMY_ROUTES = [
+  {
+    route_id: 'ROUTE1',
+    name: "Office Route",
+    coordinates: {
+      origin: "28.6139,77.2090",
+      destination: "28.5529,77.2366"
+    },
+    time: "9:00 AM",
+    duration: "25 Min Drive",
+    trafficStatus: "medium"
+  },
+  {
+    route_id: 'ROUTE2',
+    name: "Shopping Mall",
+    coordinates: {
+      origin: "28.6129,77.2290",
+      destination: "28.5729,77.2166"
+    },
+    time: "2:30 PM",
+    duration: "15 Min Drive",
+    trafficStatus: "low"
+  },
+  {
+    route_id: 'ROUTE3',
+    name: "Home Route",
+    coordinates: {
+      origin: "28.6339,77.2190",
+      destination: "28.5829,77.2266"
+    },
+    time: "6:00 PM",
+    duration: "35 Min Drive",
+    trafficStatus: "high"
+  }
+];
+
 export const Dashboard = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const [routes] = useState([
-    { 
-      name: "Bunagere, Endgame", 
-      time: "2:32 PM", 
-      duration: "7 Min Drive",
-      recommendedTime: "2:15 PM",
-      trafficStatus: "heavy"
-    },
-    { 
-      name: "Home", 
-      time: "2:45 PM", 
-      duration: "7 Min Drive",
-      recommendedTime: "2:30 PM",
-      trafficStatus: "medium"
-    },
-    { 
-      name: "Work", 
-      time: "7:32 PM", 
-      duration: "7 Min Drive",
-      recommendedTime: "7:15 PM",
-      trafficStatus: "light"
+  const [routes, setRoutes] = useState([]);
+  const [trafficStatus, setTrafficStatus] = useState({
+    density: 'Loading...',
+    nextBestTime: null,
+    lastUpdated: null,
+    hoursSinceChange: 0
+  });
+
+  const getTrafficColor = (density) => {
+    switch(density?.toLowerCase()) {
+      case 'low':
+        return 'green';
+      case 'medium':
+        return 'yellow';
+      case 'high':
+        return 'red';
+      default:
+        return 'gray';
     }
-  ]);
+  };
+
+  const fetchRoutes = async () => {
+    try {
+      const response = await routeService.getAllRoutes();
+      if (response.data && response.data.length > 0) {
+        const routesData = response.data.map(route => ({
+          route_id: route.route_id,
+          name: route.title,
+          coordinates: {
+            origin: route.start_location,
+            destination: route.end_location
+          },
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          duration: "Calculating...",
+          trafficStatus: "medium"
+        }));
+        setRoutes(routesData);
+      } else {
+        setRoutes(DUMMY_ROUTES);
+      }
+    } catch (error) {
+      console.error('Failed to fetch routes:', error);
+      setRoutes(DUMMY_ROUTES);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoutes();
+  }, []);
+
+  // Fetch traffic info for routes
+  useEffect(() => {
+    const fetchTrafficInfo = async () => {
+      try {
+        const updatedRoutes = await Promise.all(
+          routes.map(async (route) => {
+            if (route.coordinates) {
+              try {
+                const trafficInfo = await trafficService.getTrafficInfo(
+                  route.coordinates.origin,
+                  route.coordinates.destination
+                );
+                return { 
+                  ...route, 
+                  trafficInfo,
+                  trafficStatus: trafficInfo.trafficDensity.toLowerCase()
+                };
+              } catch (error) {
+                console.error(`Failed to fetch traffic for route ${route.name}:`, error);
+                return route;
+              }
+            }
+            return route;
+          })
+        );
+        setRoutes(updatedRoutes);
+      } catch (error) {
+        console.error('Failed to update routes with traffic info:', error);
+      }
+    };
+
+    fetchTrafficInfo();
+    const interval = setInterval(fetchTrafficInfo, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Traffic status effect
+  useEffect(() => {
+    const fetchTrafficStatus = async () => {
+      try {
+        const coordinates = {
+          origin: "28.6139,77.2090",
+          destination: "28.5529,77.2366"
+        };
+        
+        console.log('Fetching traffic status for coordinates:', coordinates);
+        
+        const response = await trafficService.getLocationTraffic(coordinates);
+        console.log('Traffic API Response:', response);
+
+        // Set default values if response is empty
+        if (!response || !response.trafficDensity) {
+          console.error('Invalid response format:', response);
+          setTrafficStatus({
+            density: 'Low', // Default to Low if no data
+            nextBestTime: '2:45 PM',
+            lastUpdated: new Date().toISOString(),
+            hoursSinceChange: 2 // Default to 2 hours
+          });
+          return;
+        }
+        
+        // Get the previous status from DB
+        const previousStatus = await trafficService.getPreviousTrafficStatus();
+        console.log('Previous traffic status:', previousStatus);
+        
+        let hoursSinceChange = 2; // Default to 2 hours if no previous data
+        if (previousStatus && previousStatus.density !== response.trafficDensity) {
+          const lastUpdate = new Date(previousStatus.timestamp);
+          const now = new Date();
+          hoursSinceChange = Math.round((now - lastUpdate) / (1000 * 60 * 60));
+        }
+
+        setTrafficStatus({
+          density: response.trafficDensity,
+          nextBestTime: response.nextBestTime || '2:45 PM',
+          lastUpdated: new Date().toISOString(),
+          hoursSinceChange
+        });
+
+      } catch (error) {
+        console.error('Failed to fetch traffic status:', error);
+        // Set default values on error
+        setTrafficStatus({
+          density: 'Low', // Default to Low if API fails
+          nextBestTime: '2:45 PM',
+          lastUpdated: new Date().toISOString(),
+          hoursSinceChange: 2
+        });
+      }
+    };
+
+    fetchTrafficStatus();
+    const interval = setInterval(fetchTrafficStatus, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleDeleteRoute = async (routeId) => {
+    if (window.confirm('Are you sure you want to delete this route?')) {
+      try {
+        await routeService.deleteRoute(routeId);
+        // Refresh routes list
+        await fetchRoutes();
+        alert('Route deleted successfully');
+      } catch (error) {
+        console.error('Delete error:', error);
+        alert('Failed to delete route. Please try again.');
+      }
+    }
+  };
 
   return (
     <div className="dashboard-wrapper">
       <div className="dashboard-container">
         <div className="left-section">
           <div className="traffic-status-card">
-            <div className="traffic-indicator">
-              {/* Pulsing red circle */}
-            </div>
+            <div className={`traffic-indicator ${trafficStatus.density?.toLowerCase()}`} />
             <div className="status-content">
               <h3>Your location is Currently</h3>
-              <p className="status-highlight">Experiencing Traffic for the past 2 hours</p>
+              <p className="status-highlight">
+                Experiencing {trafficStatus.density === 'Low' ? 'Light' : trafficStatus.density} Traffic
+                {trafficStatus.hoursSinceChange > 0 && ` for the past ${trafficStatus.hoursSinceChange} hours`}
+              </p>
               <div className="time-prediction">
                 <p>Convenient time to drive smoothly</p>
-                <p className="expected-time">Expected: 2:45 PM</p>
+                <p className="expected-time">
+                  Expected: {trafficStatus.nextBestTime || '2:45 PM'}
+                </p>
               </div>
             </div>
           </div>
 
           <TrafficInsights />
-
           <div className="route-plans-card">
             <div className="card-header">
               <div className="header-left">
                 <h3>Active Route Plans</h3>
-                <span className="traffic-level">Med</span>
+                <span className="traffic-level">
+                  {routes.some(r => r.trafficStatus === "high") ? "High" : "Med"}
+                </span>
               </div>
               <button className="add-route-btn" onClick={() => setIsModalOpen(true)}>
                 <Plus size={16} />
@@ -148,12 +373,19 @@ export const Dashboard = () => {
               </button>
             </div>
             <div className="routes-list">
-              {routes.map((route, index) => (
-                <RouteItem key={index} {...route} />
+              {routes.map((route) => (
+                <RouteItem 
+                  key={route.route_id} 
+                  {...route} 
+                  onDelete={handleDeleteRoute}
+                />
               ))}
             </div>
           </div>
         </div>
+
+
+      
 
         <div className="right-section">
           <div className="search-card">
@@ -176,6 +408,8 @@ export const Dashboard = () => {
           </div>
         </div>
       </div>
+
+    
 
       {/* Stats Section */}
       <div className="insights-stats-container">
@@ -211,11 +445,14 @@ export const Dashboard = () => {
         </div>
       </div>
 
+     
+
       {/* Modals */}
       {isModalOpen && (
         <AddRouteModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+          onAdd={fetchRoutes}
         />
       )}
       {isReportModalOpen && (

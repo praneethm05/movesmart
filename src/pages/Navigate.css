@@ -92,10 +92,28 @@
   flex: 1;
   background: white;
   border-radius: 24px;
-  padding: 1.5rem;
+  overflow: hidden;
+    position: relative;
+    height: 500px;
+  }
+  
+  #map {
+    height: 100%;
+    width: 100%;
+    border-radius: 24px;
+  }
+  
+  .destination-input {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.5rem;
+    background: var(--background-light);
+    padding: 0.5rem;
+    border-radius: 12px;
+  }
+  
+  .destination-input svg {
+    color: var(--text-secondary);
 }
 
 .go-button {
@@ -112,4 +130,9 @@
 
 .go-button:hover {
   opacity: 0.9;
+}
+
+.go-button:disabled {
+  background: #D1D5DB;
+  cursor: not-allowed;
 } 
