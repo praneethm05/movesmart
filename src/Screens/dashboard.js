@@ -7,31 +7,40 @@ import "./dashboard.css";
 
 const RouteItem = ({ route_id, name, onDelete }) => {
   const [routeInfo, setRouteInfo] = useState({
-    duration: 'N/A',
-    distance: 'N/A',
-    expectedDeparture: '04:41 AM'
+    duration: '25 mins',
+    distance: '5.2 km',
+    expectedDeparture: '04:41 AM',
+    event: {
+      name: 'City Music Festival',
+      type: 'Entertainment',
+      location: 'City Centre Amphitheatre'
+    }
   });
 
   return (
     <div className="route-wrapper">
       <div className="route-header-section">
         <div className="route-title">
-          <span className="route-name">Google Now</span>
+          <span className="route-name">{routeInfo.event.name}</span>
           <span className="traffic-badge">Medium</span>
-          <span className="duration-tag">N/A</span>
+          <span className="duration-tag">{routeInfo.duration}</span>
         </div>
         <div className="route-metrics">
           <div className="metric-row">
             <span>Normal Duration:</span>
-            <span className="metric-value">N/A</span>
+            <span className="metric-value">{routeInfo.duration}</span>
           </div>
           <div className="metric-row">
             <span>Distance:</span>
-            <span className="metric-value">N/A</span>
+            <span className="metric-value">{routeInfo.distance}</span>
+          </div>
+          <div className="metric-row">
+            <span>Location:</span>
+            <span className="metric-value">{routeInfo.event.location}</span>
           </div>
           <div className="metric-row departure">
             <span>Expected Departure:</span>
-            <span className="departure-time">04:41 AM</span>
+            <span className="departure-time">{routeInfo.expectedDeparture}</span>
           </div>
         </div>
         <div className="route-actions">
@@ -138,36 +147,54 @@ const ReportModal = ({ isOpen, onClose }) => {
 const DUMMY_ROUTES = [
   {
     route_id: 'ROUTE1',
-    name: "Office Route",
+    name: "City Music Festival",
     coordinates: {
       origin: "28.6139,77.2090",
       destination: "28.5529,77.2366"
     },
     time: "9:00 AM",
-    duration: "25 Min Drive",
-    trafficStatus: "medium"
+    duration: "25 mins",
+    distance: "5.2 km",
+    trafficStatus: "medium",
+    event: {
+      name: "City Music Festival",
+      type: "Entertainment",
+      location: "City Centre Amphitheatre"
+    }
   },
   {
     route_id: 'ROUTE2',
-    name: "Shopping Mall",
+    name: "Food & Wine Expo",
     coordinates: {
       origin: "28.6129,77.2290",
       destination: "28.5729,77.2166"
     },
     time: "2:30 PM",
-    duration: "15 Min Drive",
-    trafficStatus: "low"
+    duration: "15 mins",
+    distance: "3.8 km",
+    trafficStatus: "low",
+    event: {
+      name: "Food & Wine Expo",
+      type: "Food & Beverage",
+      location: "Convention Center"
+    }
   },
   {
     route_id: 'ROUTE3',
-    name: "Home Route",
+    name: "Tech Conference",
     coordinates: {
       origin: "28.6339,77.2190",
       destination: "28.5829,77.2266"
     },
     time: "6:00 PM",
-    duration: "35 Min Drive",
-    trafficStatus: "high"
+    duration: "35 mins",
+    distance: "7.5 km",
+    trafficStatus: "high",
+    event: {
+      name: "Tech Conference",
+      type: "Business",
+      location: "Innovation Hub"
+    }
   }
 ];
 
@@ -375,8 +402,9 @@ export const Dashboard = () => {
             <div className="routes-list">
               {routes.map((route) => (
                 <RouteItem 
-                  key={route.route_id} 
-                  {...route} 
+                  key={route.route_id}
+                  route_id={route.route_id}
+                  name={route.name}
                   onDelete={handleDeleteRoute}
                 />
               ))}
